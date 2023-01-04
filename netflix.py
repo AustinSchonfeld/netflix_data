@@ -1,5 +1,6 @@
 import pandas as pd
 from matplotlib import pyplot as plt
+import numpy as np
 
 #import the csv into a dataframe
 data = pd.read_csv('netflix_titles.csv', encoding = 'utf-8')
@@ -72,13 +73,29 @@ show_durations.duration = show_durations.duration.map(lambda x: x[0])
 #convert strings to int values
 movie_durations.duration = movie_durations.duration.astype('int')
 show_durations.duration = show_durations.duration.astype('int')
-#graph histograms of movie lengths and tv show seasons
+#graph charts of movie lengths and tv show seasons
 f = plt.figure()
 f.set_figwidth(20)
 f.set_figheight(10)
-plt.hist(movie_durations.duration, bins = [*range(0, 200, 10)])
+plt.hist(movie_durations.duration, bins = [*range(0, 200, 10)], edgecolor = 'black')
 plt.xticks([*range(0, 200, 10)])
+plt.title('Distribution of Movie Lengths')
+plt.xlabel('Movie Length (mins)')
+plt.ylabel('Number of Movies')
 plt.savefig('movie_lengths.png')
+plt.clf()
+
+#need value counts for # of seasons
+labels, counts = np.unique(show_durations.duration, return_counts=True)
+f = plt.figure()
+f.set_figwidth(20)
+f.set_figheight(10)
+plt.bar(labels, counts, edgecolor = 'black')
+plt.xticks(labels)
+plt.title('Distribution of # of Seasons for TV Shows')
+plt.xlabel('Number of Seasons')
+plt.ylabel('Number of Shows')
+plt.savefig('show_lengths.png')
 plt.clf()
 
 print(show_durations.head(25))
