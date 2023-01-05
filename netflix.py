@@ -47,7 +47,7 @@ durations = breakdown('duration')
 categories = breakdown('listed_in')
 descriptions = breakdown('description')
 
-#now lets explode the lists into individual rows associated with the proper show_id
+#now lets explode the lists into individual rows associated with the proper show_id in order to get rid of the lists within cells
 
 directors = directors.explode('director')
 cast = cast.explode('cast')
@@ -110,6 +110,21 @@ ratings_by_genre = ratings_by_genre.groupby(['listed_in', 'rating']).rating.coun
 unstacked_ratings = ratings_by_genre.unstack()
 #unstacked data revealed some typos where there is a movie duration in place of a rating, go back above and remove the rows containing 66, 74, and 84 min for ratings
 print(unstacked_ratings.head(20))
-#there are too many categories to do a single grouped bar chart, lets do a different chart for each category
-unstacked_ratings.plot(kind='bar')
-plt.savefig(('genres_and_ratings.png'))
+#there are too many categories to do a single grouped bar chart, lets do a single example chart of one category
+comedy_ratings = unstacked_ratings.loc['Comedies']
+comedy_ratings = comedy_ratings.reindex(index = ['G', 'PG', 'PG-13', 'R', 'NC-17', 'TV-G', 'TV-PG', 'TV-14', 'TV-MA', 'TV-Y', 'TV-Y7', 'TV-Y7-FV', 'UR', 'NR'])
+comedy_ratings.plot(kind = 'bar')
+plt.xlabel('Movie/Show Rating')
+plt.ylabel('Number of Movies/Shows')
+plt.title('Distribution of Movie and Show Ratings for Comedies')
+plt.savefig('comedy_ratings.png')
+plt.clf()
+
+#How much of Netflix's content is recently released and how much is older movies/shows?
+releases.release_year = releases.release_year.astype('int')
+labels, counts = np.unique(releases.release_year, return_counts = True)
+plt.bar(labels, counts, edgecolor = 'black')
+plt.title('Original Release Dates of Netflix Content')
+plt.xlabel('Year Released')
+plt.ylabel('Number of Movies/Shows')
+plt.savefig('release_years.png')
