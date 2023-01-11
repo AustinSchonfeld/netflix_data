@@ -167,7 +167,22 @@ def search_results(mode, search):
     elif mode == 3:
         print('Director Results for: ' + search)
     elif mode == 4:
-        print('Category Results for: ' + search)    
+        print('Category Results for: ' + search)
+
+#four functions below corrspond to the search mode the user has chosen
+def title_results(search):
+    results = titles.title.loc[titles.title.str.contains(search, case = False)]
+    print(results.to_string(index=False))
+def actor_results(search):
+    results = cast.merge(titles, on = 'show_id')
+    results = results.loc[results.cast.str.contains(search, case = False)]
+    print(results[['title', 'cast']].to_string(index=False))
+def director_results(search):
+    results = directors.merge(titles, on = 'show_id')
+    results = results.loc[results.director.str.contains(search, case = False)]
+    print(results[['title', 'director']].to_string(index=False))
+def category_results(search):
+    None
 
 #function that asks the user if they would like to return to main menu
 def return_to_main():
@@ -180,7 +195,7 @@ def check_input():
     end_function = False
     while end_function == False:
         user_input = input()
-        if ((user_input.isnumeric()) & (len(user_input) == 1) & (int(user_input) <= 5)):
+        if ((user_input.isnumeric()) & (len(user_input) == 1) & (int(user_input) <= 5) & (int(user_input) != 0)):
             end_function = True
             output = int(user_input)
         else:
@@ -189,6 +204,8 @@ def check_input():
     return output
 
 exit = False
+
+print(titles.head())
 
 #main code block for user search
 #as long as user does not want to exit, code keeps looping
@@ -207,7 +224,16 @@ while exit == False:
         search_mode(mode)
         user_search = input()
         search_results(mode, user_search)
+        if mode == 1:
+            title_results(user_search)
+        elif mode == 2:
+            actor_results(user_search)
+        elif mode == 3:
+            director_results(user_search)
+        elif mode == 4:
+            category_results(user_search)
         #after printing results, ask user if they would like to return to main menu
+        #set main to something other than y or n
         main = 'failure'
         while ((main != 'y') & (main !='n')):
             main = return_to_main()
