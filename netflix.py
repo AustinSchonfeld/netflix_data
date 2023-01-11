@@ -179,9 +179,8 @@ def return_to_main():
 def check_input():
     end_function = False
     while end_function == False:
-        print('test')
         user_input = input()
-        if ((user_input.isnumeric()) & (len(user_input) == 1)):
+        if ((user_input.isnumeric()) & (len(user_input) == 1) & (int(user_input) <= 5)):
             end_function = True
             output = int(user_input)
         else:
