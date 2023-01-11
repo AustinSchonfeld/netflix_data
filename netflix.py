@@ -128,3 +128,96 @@ plt.title('Original Release Dates of Netflix Content')
 plt.xlabel('Year Released')
 plt.ylabel('Number of Movies/Shows')
 plt.savefig('release_years.png')
+
+### NEW TASK ###
+### Create a search function based on user input ###
+
+#main menu function
+def main_menu():
+    print('Welcome to Netflix Search 1.0')
+    print('''Please select a search mode or press 5 to end program:
+    1) Title
+    2) Actor
+    3) Director
+    4) Category
+    5) Exit''')
+
+#function that determines the search mode and determines if program should exit based on user input
+def search_mode(mode):
+    if mode == 1:
+        print('Enter a title to search for:')
+    elif mode == 2:
+        print('Enter an actor to search for:')
+    elif mode == 3:   
+        print('Enter a director to search for:')
+    elif mode == 4:
+        print('Enter a category to search for:')
+    else:
+        print('You have entered an invalid search mode. Please try again.')
+        mode = check_input()
+    return mode
+
+#function that displays search results
+def search_results(mode, search):
+    results = None
+    if mode == 1:
+        print('Title Results for: ' + search)
+    elif mode == 2:
+        print('Actor Results for: ' + search)
+    elif mode == 3:
+        print('Director Results for: ' + search)
+    elif mode == 4:
+        print('Category Results for: ' + search)    
+
+#function that asks the user if they would like to return to main menu
+def return_to_main():
+    print('Would you like to return to main menu? (y/n)')
+    main = input()
+    return main
+
+#function that takes user input and checks if its numeric
+def check_input():
+    end_function = False
+    while end_function == False:
+        print('test')
+        user_input = input()
+        if ((user_input.isnumeric()) & (len(user_input) == 1)):
+            end_function = True
+            output = int(user_input)
+        else:
+            end_function = False
+            print('Please input a number (1-5)')
+    return output
+
+exit = False
+
+#main code block for user search
+#as long as user does not want to exit, code keeps looping
+while exit == False:
+    #print main menu
+    main_menu()
+    #ask for user input on search mode
+    mode = check_input()
+    #determines if program should exit based on user input at main menu
+    if mode == 5:
+        print('Goodbye')
+        exit = True
+        continue
+    #if user does not exit, ask for search parameters and print results
+    else:
+        search_mode(mode)
+        user_search = input()
+        search_results(mode, user_search)
+        #after printing results, ask user if they would like to return to main menu
+        main = 'failure'
+        while ((main != 'y') & (main !='n')):
+            main = return_to_main()
+            if main == 'y':
+                continue
+            #if 'n' program exits
+            elif main == 'n':
+                exit = True 
+                continue 
+            #check to see if user entered something other than 'y' or 'n'
+            else:
+                print('Please try input again')
