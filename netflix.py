@@ -172,17 +172,39 @@ def search_results(mode, search):
 #four functions below corrspond to the search mode the user has chosen
 def title_results(search):
     results = titles.title.loc[titles.title.str.contains(search, case = False)]
-    print(results.to_string(index=False))
+    if len(results) == 0:
+        print('Your search did not return any results')
+    else:
+        print(results.to_string(index=False))
 def actor_results(search):
     results = cast.merge(titles, on = 'show_id')
     results = results.loc[results.cast.str.contains(search, case = False)]
-    print(results[['title', 'cast']].to_string(index=False))
+    if len(results) == 0:
+        print('Your search did not return any results')
+    else:
+        print(results[['title', 'cast']].to_string(index=False))
 def director_results(search):
     results = directors.merge(titles, on = 'show_id')
     results = results.loc[results.director.str.contains(search, case = False)]
-    print(results[['title', 'director']].to_string(index=False))
+    if len(results) == 0:
+        print('Your search did not return any results')
+    else:
+        print(results[['title', 'director']].to_string(index=False))
 def category_results(search):
-    None
+    results = categories.merge(titles, on = 'show_id')
+    results = results.loc[results.listed_in.str.contains(search, case = False)]
+    if len(results) == 0:
+        print('There are {} titles in that category.'.format(len(results)))
+    else:
+        print('There are {} titles in that category. Would you like to see all? (y/n)'.format(len(results)))
+        see_all = input()
+        if see_all == 'y':
+            print(results[['title', 'listed_in']].to_string(index=False))
+        elif see_all == 'n':
+            print('Here are the first 25 titles in that category.')
+            print(results[['title', 'listed_in']].head(25).to_string(index=False))
+        else:
+            print('You entered an invalid response.')
 
 #function that asks the user if they would like to return to main menu
 def return_to_main():
@@ -204,8 +226,6 @@ def check_input():
     return output
 
 exit = False
-
-print(titles.head())
 
 #main code block for user search
 #as long as user does not want to exit, code keeps looping
